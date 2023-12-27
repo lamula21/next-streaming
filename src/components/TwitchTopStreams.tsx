@@ -49,6 +49,7 @@ export function TwitchTopStreams() {
 							{result.data.map((channel) => (
 								<div className="p-1">
 									<ThumbCard
+										key={channel.id}
 										name={channel.user_name}
 										chnId={channel.user_login}
 										title={channel.title}

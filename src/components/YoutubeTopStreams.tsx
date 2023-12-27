@@ -54,6 +54,7 @@ export function YoutubeTopStreams() {
 							{result.data.map((channel) => (
 								<div className="p-1">
 									<ThumbCard
+										key={channel.channel_id}
 										name={channel.channel_name}
 										chnId={channel.video_id}
 										title={channel.video_name}
