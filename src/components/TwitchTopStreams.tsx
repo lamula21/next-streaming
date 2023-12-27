@@ -47,9 +47,8 @@ export function TwitchTopStreams() {
 					{!isLoading && (
 						<div className="select-none grid-cols-2 sm:grid sm:pl-16 lg:grid-cols-3 xl:grid-cols-4 xl:p-32 xl:pr-32 2xl:grid-cols-6">
 							{result.data.map((channel) => (
-								<div className="p-1">
+								<div className="p-1" key={channel.id}>
 									<ThumbCard
-										key={channel.id}
 										name={channel.user_name}
 										chnId={channel.user_login}
 										title={channel.title}
