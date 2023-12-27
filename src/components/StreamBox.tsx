@@ -1,8 +1,17 @@
+import { cn } from "@/lib/utils"
 import { TWITCH_WATCH_ENDPOINT, YOUTUBE_WATCH_ENDPOINT } from "@/lib/constants"
 import ReactPlayer from "react-player"
-import { TwitchChat } from "react-twitch-embed"
+
+import {
+	ContextMenu,
+	ContextMenuContent,
+	ContextMenuItem,
+	ContextMenuSeparator,
+	ContextMenuShortcut,
+	ContextMenuTrigger,
+} from "@/components/ui/context-menu"
 import { YoutubeChat } from "./YoutubeChat"
-import { cn } from "@/lib/utils"
+import { TwitchChat } from "react-twitch-embed"
 
 type StreamBoxProps = {
 	streamId: string

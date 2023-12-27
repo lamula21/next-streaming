@@ -19,10 +19,19 @@ export async function GET(req: NextRequest) {
 
 	const tokenBearer = token.split(" ")[1] // get only the token
 
-	const liveVideos = await getTopYtLiveVideos(tokenBearer, keyword)
+	try {
+		const liveVideos = await getTopYtLiveVideos(tokenBearer, keyword)
 
-	return NextResponse.json(
-		{ data: liveVideos, platform: "youtube", keyword: keyword },
-		{ status: 200 }
-	)
+		return NextResponse.json(
+			{ data: liveVideos, platform: "youtube", keyword: keyword },
+			{ status: 200 }
+		)
+	} catch (error) {
+		return NextResponse.json(
+			{
+				message: "Out of quotas for accessing Youtube API. Contact developer.",
+			},
+			{ status: 401 }
+		)
+	}
 }

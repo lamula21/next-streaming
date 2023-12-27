@@ -6,6 +6,7 @@ import { useSelector } from "react-redux"
 import { ThumbCard } from "./ThumbCard"
 import { Skeleton } from "./ui/skeleton"
 import { KEYWORD } from "@/lib/constants"
+import { toast } from "sonner"
 
 export function YoutubeTopStreams() {
 	// get youtube session
@@ -31,8 +32,20 @@ export function YoutubeTopStreams() {
 				}
 			)
 
-			setResult(await response.json())
-			setIsLoading(false)
+			if (response.status === 401) {
+				toast.message(
+					"Sorry! We ran out of Youtube API quota. Try it tomorrow",
+					{
+						description:
+							"Quotas restart at 12:00 AM PST (Pacific Standard Time)",
+					}
+				)
+			}
+
+			if (response.ok) {
+				setResult(await response.json())
+				setIsLoading(false)
+			}
 		}
 	}
 
