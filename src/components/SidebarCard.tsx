@@ -13,7 +13,7 @@ interface SidebarCardProps {
 	isLive?: boolean
 }
 
-export default function SidebarCard({
+export function SidebarCard({
 	name,
 	chnId,
 	chnPlt,
