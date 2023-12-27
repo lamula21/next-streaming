@@ -235,7 +235,7 @@ export default function Login() {
 
 								signOut({
 									redirect: false,
-									callbackUrl: "http://localhost:3000/",
+									callbackUrl: "/",
 								})
 
 								toast.message(
