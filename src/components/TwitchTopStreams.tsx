@@ -1,11 +1,12 @@
 "use client"
 
-import { StoreState, YChannel } from "@/types/redux-types"
+import { StoreState } from "@/types/redux-types"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { Skeleton } from "./ui/skeleton"
 import { ThumbCard } from "./ThumbCard"
 import { TwitchTopLiveStream } from "@/types/types"
+import { toast } from "sonner"
 
 export function TwitchTopStreams() {
 	const [result, setResult] = useState<TwitchTopLiveStream>({
@@ -20,20 +21,29 @@ export function TwitchTopStreams() {
 
 	const getTwitchTopStreams = async () => {
 		if (session) {
-			setIsLoading(true)
 			const response = await fetch("/api/get-twitch-top-streams", {
-				next: { revalidate: 5 }, // data cached for 5 seconds
+				next: { revalidate: 60 }, // data cached for 30 seconds
 				headers: { Authorization: "OAuth " + session.accessToken },
 			})
 
-			setResult(await response.json())
-			setIsLoading(false)
+			if (response.status === 401) {
+				toast.message("Your twitch session has expired", {
+					description: "Please sign in again",
+				})
+			}
+
+			if (response.ok) {
+				setResult(await response.json())
+				setIsLoading(false)
+			}
 		}
 	}
 
 	useEffect(() => {
-		getTwitchTopStreams()
-	}, [session])
+		console.log("hello")
+
+		// getTwitchTopStreams()
+	}, [])
 
 	return (
 		<div className="flex flex-col mt-2 space-x-1">
@@ -42,12 +52,12 @@ export function TwitchTopStreams() {
 					Top Twitch Streaming
 				</h2>
 
-				<div className="text-xs">
+				<div className="text-xs mt-8">
 					{isLoading && <Skeleton className="h-12 w-36" />}
 					{!isLoading && (
-						<div className="select-none grid-cols-2 sm:grid sm:pl-16 lg:grid-cols-3 xl:grid-cols-4 xl:p-32 xl:pr-32 2xl:grid-cols-6">
+						<div className="select-none gap-3 grid-cols-2 sm:grid sm:px-6 lg:grid-cols-3 xl:grid-cols-4  2xl:grid-cols-6">
 							{result.data.map((channel) => (
-								<div className="p-1" key={channel.id}>
+								<div className="" key={channel.id}>
 									<ThumbCard
 										name={channel.user_name}
 										chnId={channel.user_login}

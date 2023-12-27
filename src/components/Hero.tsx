@@ -1,20 +1,19 @@
 "use client"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Login from "./Login"
+import { Login } from "./Login"
 import { SearchBox } from "./SearchBox"
 import { StreamConfig } from "./StreamConfig"
 import { useDispatch, useSelector } from "react-redux"
 import { StoreState } from "@/types/redux-types"
 import { StreamBox } from "./StreamBox"
-import StreamScreen from "./StreamScreen"
+import { StreamScreen } from "./StreamScreen"
 import { saveTabMode, selectScreen, selectView } from "@/modules/slice"
 import { TwitchTopStreams } from "./TwitchTopStreams"
 import { YoutubeTopStreams } from "./YoutubeTopStreams"
 
 export function Hero() {
 	const dispatch = useDispatch()
-	const channelName = useSelector((state: StoreState) => state.counter.name)
 	const channelId = useSelector((state: StoreState) => state.counter.chnId)
 	const channelPlatform = useSelector(
 		(state: StoreState) => state.counter.platform
@@ -30,9 +29,7 @@ export function Hero() {
 						<StreamConfig />
 					</div>
 
-					<div className="">
-						<Login />
-					</div>
+					<Login />
 				</nav>
 
 				<section id="main" className="h-full px-4 m-6 lg:px-8">
@@ -81,7 +78,6 @@ export function Hero() {
 							</div>
 
 							<TwitchTopStreams />
-
 							<YoutubeTopStreams />
 						</TabsContent>
 

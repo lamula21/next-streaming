@@ -42,12 +42,12 @@ export function ThumbCard({
 					<Image src={thumbUrl} alt="thumbnail" width={320} height={180} />
 
 					<div className="absolute top-2 left-2 px-1 rounded bg-red-500">
-						<p className="text-white text-sm font-bold">Live</p>
+						<p className="text-white text-xs font-bold">Live</p>
 					</div>
 
 					{viewCount && (
-						<div className="absolute top-10 left-2 px-1 rounded bg-gray-900/70">
-							<p className="text-white text-sm font-bold">
+						<div className="absolute bottom-2 left-2 px-1 rounded bg-gray-900/70">
+							<p className="text-white text-xs font-bold">
 								{viewCount} viewers
 							</p>
 						</div>
@@ -55,23 +55,19 @@ export function ThumbCard({
 				</div>
 
 				<div>
-					<div className="top-10 left-2 px-1 py-1">
+					<div className="py-[2px] pt-2">
 						<p className="text-left text-white text-sm font-bold truncate">
 							{title}
 						</p>
 					</div>
 
-					<div className="top-10 left-2 px-1 py-1 text-sm">
-						<p className="text-left text-gray-400 text-xs font-bold truncate">
-							{name}
-						</p>
-					</div>
+					<p className="text-left text-gray-400 text-xs font-bold truncate">
+						{name}
+					</p>
 
-					<div className="top-10 left-2 px-1 py-1 text-sm">
-						<p className="text-left text-gray-400 text-xs font-bold truncate">
-							{game}
-						</p>
-					</div>
+					<p className="text-left text-gray-400 text-xs font-bold truncate">
+						{game}
+					</p>
 				</div>
 			</div>
 		</button>

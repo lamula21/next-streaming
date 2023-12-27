@@ -14,7 +14,7 @@ import {
 	twitchChannels,
 	youtubeChannels,
 } from "@/modules/slice"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { persistor } from "@/modules/store"
 
@@ -37,7 +37,7 @@ import { fetchTokenValidation } from "@/services/twitch-api"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 
-export default function Login() {
+export function Login() {
 	const router = useRouter()
 	const { data: userName } = useSession()
 
@@ -58,9 +58,22 @@ export default function Login() {
 	let isConnectedTwitch = twitchSession?.accessToken !== undefined
 	let isConnectedYT = youtubeSession?.accessToken !== undefined
 
-	const handleSignIn = async () => {
-		await signIn()
-	}
+	// useCallback memoize a function to avoid unnecessary re-renders
+	// Note: use useMemo() to memoize a value or a function value
+	const handleSignOutWhenTokenExpired = useCallback(
+		() => () => {
+			persistor.purge() // do not await
+			dispatch(resetStore()) // Reset redux store
+
+			signOut({
+				redirect: false,
+				callbackUrl: "/",
+			})
+			router.refresh()
+			toast.error("Session expired, please sign in again")
+		},
+		[]
+	)
 
 	const getTwitchChannels = async () => {
 		if (!twitchSession) {
@@ -74,13 +87,9 @@ export default function Login() {
 			},
 		})
 
+		// Token expired
 		if (res.status === 401) {
-			// token expired
-			toast.error("Session expired, please sign in again")
-			persistor.purge()
-			// signOut({
-			// 	redirect: false,
-			// })
+			handleSignOutWhenTokenExpired()
 		}
 
 		if (res.ok) {
@@ -103,6 +112,13 @@ export default function Login() {
 			},
 		})
 
+		if (res.status === 401) {
+			// console.log("401")
+			// toast.message("Sorry! We ran out of Youtube API quota. Try it tomorrow", {
+			// 	description: "Quotas restart at 12:00 AM PST (Pacific Standard Time)",
+			// })
+		}
+
 		if (res.ok) {
 			const data = await res.json()
 			dispatch(youtubeChannels(data))
@@ -114,16 +130,12 @@ export default function Login() {
 			const response = await fetchTokenValidation(loginSession)
 
 			if (!response.ok) {
-				toast.error("Session expired, please sign in again")
-				persistor.purge()
-				// signOut({
-				// 	redirect: false,
-				// })
+				handleSignOutWhenTokenExpired()
 			}
 		}
 	}
 
-	// A mechanism to save session when connection is lost
+	// A mechanism to save Twitch and Youtube session separately
 	useEffect(() => {
 		// this runs one time after logging in
 		if (loginSession?.user?.name === undefined) {
@@ -146,6 +158,7 @@ export default function Login() {
 	}, [])
 
 	useEffect(() => {
+		console.log(twitchSession)
 		// optimize queries
 		if (!twitchSession) {
 			return
@@ -164,7 +177,7 @@ export default function Login() {
 
 	if (loginSession) {
 		return (
-			<>
+			<div>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="outline" size="icon" className="rounded-full">
@@ -255,7 +268,7 @@ export default function Login() {
 					<br />
 					<br />
 				</div>
-			</>
+			</div>
 		)
 	} else {
 		return (
@@ -274,7 +287,7 @@ export default function Login() {
 					</DropdownMenuTrigger>
 
 					<DropdownMenuContent align="end">
-						<DropdownMenuItem onClick={() => handleSignIn()}>
+						<DropdownMenuItem onClick={() => signIn()}>
 							<span>Sign In</span>
 						</DropdownMenuItem>
 

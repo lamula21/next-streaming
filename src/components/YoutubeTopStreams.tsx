@@ -1,6 +1,7 @@
 "use client"
+
 import { StoreState } from "@/types/redux-types"
-import { TwitchTopLiveStream, YoutubeTopLiveStream } from "@/types/types"
+import { YoutubeTopLiveStream } from "@/types/types"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { ThumbCard } from "./ThumbCard"
@@ -9,11 +10,6 @@ import { KEYWORD } from "@/lib/constants"
 import { toast } from "sonner"
 
 export function YoutubeTopStreams() {
-	// get youtube session
-	const ytSession = useSelector(
-		(state: StoreState) => state.counter.youtubeSession
-	)
-
 	const [result, setResult] = useState<YoutubeTopLiveStream>({
 		data: [],
 		platform: "",
@@ -21,18 +17,23 @@ export function YoutubeTopStreams() {
 	})
 	const [isLoading, setIsLoading] = useState(true) // loading initially
 
+	// get youtube session
+	const ytSession = useSelector(
+		(state: StoreState) => state.counter.youtubeSession
+	)
+
 	const getYoutubeTopStreams = async () => {
 		if (ytSession) {
-			setIsLoading(true)
 			const response = await fetch(
 				`/api/get-youtube-top-streams?keyword=${KEYWORD}`,
 				{
-					next: { revalidate: 30 }, // data cached for 30 seconds
+					cache: "force-cache",
 					headers: { Authorization: "OAuth " + ytSession.accessToken },
 				}
 			)
 
 			if (response.status === 401) {
+				console.log("401")
 				toast.message(
 					"Sorry! We ran out of Youtube API quota. Try it tomorrow",
 					{
@@ -50,14 +51,17 @@ export function YoutubeTopStreams() {
 	}
 
 	useEffect(() => {
-		getYoutubeTopStreams()
+		if (ytSession) {
+			console.log("called")
+			getYoutubeTopStreams()
+		}
 	}, [ytSession])
 
 	return (
 		<div className="flex flex-col mt-2 space-x-1">
 			<div className="w-full ml-0 m-4">
 				<h2 className="text-2xl font-semibold tracking-tight">
-					Top Twitch Streaming
+					Top Youtube Streaming
 				</h2>
 
 				<div className="text-xs">

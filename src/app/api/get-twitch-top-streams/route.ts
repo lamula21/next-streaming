@@ -12,18 +12,23 @@ export async function GET(req: NextRequest) {
 
 	const tokenBearer = token.split(" ")[1] // get only the token
 
-	const validated = await validateToken("twitch", requestHeaders)
+	try {
+		const { client_id } = await validateToken("twitch", requestHeaders)
 
-	const { data: topStreamersList } = await getTwitchTopStreamers(
-		tokenBearer,
-		validated.client_id
-	)
+		// always ok when token is valid
+		const { data: topStreamersList } = await getTwitchTopStreamers(
+			tokenBearer,
+			client_id
+		)
 
-	const replacedString = JSON.stringify(topStreamersList)
-		.replace(/\{width\}/g, "320")
-		.replace(/\{height\}/g, "180")
+		const replacedString = JSON.stringify(topStreamersList)
+			.replace(/\{width\}/g, "320")
+			.replace(/\{height\}/g, "180")
 
-	const data = JSON.parse(replacedString)
+		const data = JSON.parse(replacedString)
 
-	return NextResponse.json({ data, platform: "twitch" }, { status: 200 })
+		return NextResponse.json({ data, platform: "twitch" }, { status: 200 })
+	} catch (error) {
+		return NextResponse.json({ message: "Invalid token" }, { status: 401 })
+	}
 }

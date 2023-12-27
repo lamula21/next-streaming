@@ -13,9 +13,18 @@ export async function GET(req: NextRequest) {
 		return NextResponse.json({ message: "No token provided" }, { status: 401 })
 	}
 
-	const tokenBearer = token.split(" ")[1] // get only the token
-	const ytchannels = await getSubscribedYtChannels(tokenBearer)
-	const data = await getAllYtVideos(tokenBearer, ytchannels)
+	try {
+		const tokenBearer = token.split(" ")[1] // get only the token
+		const ytchannels = await getSubscribedYtChannels(tokenBearer)
+		const data = await getAllYtVideos(tokenBearer, ytchannels)
 
-	return NextResponse.json({ data, platform: "youtube" }, { status: 200 })
+		return NextResponse.json({ data, platform: "youtube" }, { status: 200 })
+	} catch (error) {
+		return NextResponse.json(
+			{
+				message: "Out of quotas for accessing Youtube API. Contact developer.",
+			},
+			{ status: 401 }
+		)
+	}
 }
