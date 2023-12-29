@@ -5,7 +5,14 @@ import { PiPlugsConnectedBold } from "react-icons/pi"
 import { TbPlugConnected } from "react-icons/tb"
 import { useTheme } from "next-themes"
 import { signIn, signOut, useSession } from "next-auth/react"
-import { useDispatch, useSelector } from "react-redux"
+import { persistor } from "@/modules/store"
+import { useEffect, useRef } from "react"
+import { cn } from "@/lib/utils"
+import { useRouter } from "next/navigation"
+import { useDispatch, useSelector, shallowEqual } from "react-redux"
+import { StoreState } from "@/types/redux-types"
+import { fetchTokenValidation } from "@/services/twitch-api"
+import { toast } from "sonner"
 import {
 	resetStore,
 	saveLoginSession,
@@ -14,9 +21,6 @@ import {
 	twitchChannels,
 	youtubeChannels,
 } from "@/modules/slice"
-import { useCallback, useEffect } from "react"
-import { cn } from "@/lib/utils"
-import { persistor } from "@/modules/store"
 
 import {
 	DropdownMenu,
@@ -32,27 +36,28 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "./ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { StoreState } from "@/types/redux-types"
-import { fetchTokenValidation } from "@/services/twitch-api"
-import { toast } from "sonner"
-import { useRouter } from "next/navigation"
 
 export function Login() {
 	const router = useRouter()
-	const { data: userName } = useSession()
 
 	const { setTheme } = useTheme()
-	const { data: session, status } = useSession()
-	const dispatch = useDispatch()
 
+	const { data: session, status } = useSession()
+
+	console.log(session)
+
+	const dispatch = useDispatch()
 	const loginSession = useSelector(
-		(state: StoreState) => state.counter.loginSession
+		(state: StoreState) => state.counter.loginSession,
+		shallowEqual
 	)
 	const twitchSession = useSelector(
-		(state: StoreState) => state.counter.twitchSession
+		(state: StoreState) => state.counter.twitchSession,
+		shallowEqual
 	)
 	const youtubeSession = useSelector(
-		(state: StoreState) => state.counter.youtubeSession
+		(state: StoreState) => state.counter.youtubeSession,
+		shallowEqual
 	)
 
 	let isConnectedTwitch = twitchSession?.accessToken !== undefined
@@ -60,26 +65,19 @@ export function Login() {
 
 	// useCallback memoize a function to avoid unnecessary re-renders
 	// Note: use useMemo() to memoize a value or a function value
-	const handleSignOutWhenTokenExpired = useCallback(
-		() => () => {
-			persistor.purge() // do not await
-			dispatch(resetStore()) // Reset redux store
+	const handleSignOutWhenTokenExpired = () => {
+		persistor.purge() // do not await
+		dispatch(resetStore()) // Reset redux store
 
-			signOut({
-				redirect: false,
-				callbackUrl: "/",
-			})
-			router.refresh()
-			toast.error("Session expired, please sign in again")
-		},
-		[]
-	)
+		signOut({
+			redirect: false,
+			callbackUrl: "/",
+		})
+		router.refresh()
+		toast.error("Session expired, please sign in again")
+	}
 
 	const getTwitchChannels = async () => {
-		if (!twitchSession) {
-			return
-		}
-
 		const res = await fetch("/api/get-twitch-channels", {
 			cache: "no-store",
 			headers: {
@@ -94,7 +92,8 @@ export function Login() {
 
 		if (res.ok) {
 			const data = await res.json()
-			dispatch(twitchChannels(data))
+			console.log("PRObLEM HERE?")
+			dispatch(twitchChannels(data)) // problem here?
 		}
 	}
 
@@ -108,7 +107,7 @@ export function Login() {
 				revalidate: 60 * 60, // 1 hour
 			},
 			headers: {
-				Authorization: `OAuth ${youtubeSession.accessToken}`,
+				Authorization: `OAuth ${youtubeSession}`,
 			},
 		})
 
@@ -127,6 +126,7 @@ export function Login() {
 
 	const validateSession = async () => {
 		if (loginSession?.provider !== undefined) {
+			console.log(loginSession)
 			const response = await fetchTokenValidation(loginSession)
 
 			if (!response.ok) {
@@ -138,7 +138,7 @@ export function Login() {
 	// A mechanism to save Twitch and Youtube session separately
 	useEffect(() => {
 		// this runs one time after logging in
-		if (loginSession?.user?.name === undefined) {
+		if (loginSession?.accessToken === undefined) {
 			if (session !== null) {
 				dispatch(saveLoginSession(session))
 			}
@@ -146,6 +146,7 @@ export function Login() {
 
 		// connecting again, save platform session
 		if (session?.provider === "twitch") {
+			console.log(session)
 			dispatch(saveTwitchSession(session))
 		} else if (session?.provider === "google") {
 			dispatch(saveYoutubeSession(session))
@@ -158,20 +159,15 @@ export function Login() {
 	}, [])
 
 	useEffect(() => {
-		console.log(twitchSession)
-		// optimize queries
-		if (!twitchSession) {
-			return
-		}
+		if (!twitchSession) return
 
+		console.log(twitchSession)
 		getTwitchChannels()
 	}, [twitchSession])
 
 	useEffect(() => {
-		// optimize queries
-		if (!youtubeSession) {
-			return
-		}
+		if (!youtubeSession) return
+
 		getYoutubeChannels()
 	}, [youtubeSession])
 
@@ -242,7 +238,7 @@ export function Login() {
 						<DropdownMenuItem
 							onClick={() => {
 								// fixed bug: NEXTAUTH_URL & NEXTAUTH_SECRET env was not set
-								const username = userName?.name
+								const username = session?.name
 								persistor.purge() // do not await
 								dispatch(resetStore()) // Reset redux store
 
