@@ -118,7 +118,6 @@ export function Login() {
 
 	const validateSession = async () => {
 		if (loginSession?.provider !== undefined) {
-			console.log(loginSession)
 			const response = await fetchTokenValidation(loginSession)
 
 			if (!response.ok) {

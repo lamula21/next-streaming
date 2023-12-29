@@ -4,7 +4,6 @@ import { useSelector } from "react-redux"
 import { StreamBox } from "./StreamBox"
 
 export function StreamScreen() {
-	const name = useSelector((state: StoreState) => state.counter.name)
 	const view = useSelector((state: StoreState) => state.counter.view)
 	const screen = useSelector((state: StoreState) => state.counter.screen)
 	const channelId = useSelector((state: StoreState) => state.counter.chnId)

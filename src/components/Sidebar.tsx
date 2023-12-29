@@ -1,6 +1,5 @@
 "use client"
 
-import { Playlist } from "@/data/playlist"
 import { cn } from "@/lib/utils"
 import { BsTwitch, BsYoutube } from "react-icons/bs"
 import { SidebarCard } from "./SidebarCard"

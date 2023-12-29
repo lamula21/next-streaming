@@ -35,7 +35,6 @@ export function YoutubeTopStreams() {
 			)
 
 			if (response.status === 401) {
-				console.log("401")
 				toast.message(
 					"Sorry! We ran out of Youtube API quota. Try it tomorrow",
 					{
@@ -54,7 +53,6 @@ export function YoutubeTopStreams() {
 
 	useEffect(() => {
 		if (ytSession) {
-			console.log("called")
 			getYoutubeTopStreams()
 		}
 	}, [ytSession])
