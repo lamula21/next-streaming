@@ -9,11 +9,9 @@ import { StoreState } from "@/types/redux-types"
 import { Logo } from "./Logo"
 import { ScrollArea } from "./ui/scroll-area"
 
-interface SidebarProps extends React.HTMLAttributes<HTMLElement> {
-	playlists: Playlist[]
-}
+interface SidebarProps extends React.HTMLAttributes<HTMLElement> {}
 
-export function Sidebar({ className, playlists }: SidebarProps) {
+export function Sidebar({ className }: SidebarProps) {
 	const tchannels = useSelector((state: StoreState) => state.counter.tchannels)
 	const ychannels = useSelector((state: StoreState) => state.counter.ychannels)
 

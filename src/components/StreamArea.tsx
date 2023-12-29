@@ -7,6 +7,7 @@ import { YoutubeTopStreams } from "./YoutubeTopStreams"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { StoreState } from "@/types/redux-types"
 import { saveTabMode, selectScreen, selectView } from "@/modules/slice"
+import { StreamBoxSkeleton } from "./skeleton/StreamBoxSkeleton"
 
 export function StreamArea() {
 	const dispatch = useDispatch()
@@ -47,7 +48,7 @@ export function StreamArea() {
 						{/* stream box */}
 
 						<div className="flex justify-center w-full m-2">
-							{channelId === "" && <></>}
+							{channelId === "" && <StreamBoxSkeleton />}
 							{channelId !== "" && (
 								<StreamBox
 									streamId={channelId}

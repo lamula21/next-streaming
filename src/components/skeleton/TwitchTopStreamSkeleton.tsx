@@ -1,0 +1,52 @@
+import { Skeleton } from "../ui/skeleton"
+
+export function TopStreamsSkeleton() {
+	return (
+		<div className="select-none gap-3 grid-cols-2 sm:grid sm:px-6 lg:grid-cols-3 xl:grid-cols-4  2xl:grid-cols-6">
+			<div className="aspect-video">
+				<div className="flex flex-col gap-1">
+					<Skeleton className="aspect-video" />
+					<Skeleton className="w-[80%] h-4" />
+					<Skeleton className="w-20 h-4" />
+					<Skeleton className="w-20 h-4" />
+				</div>
+			</div>
+
+			<div className="aspect-video">
+				<div className="flex flex-col gap-1">
+					<Skeleton className="aspect-video" />
+					<Skeleton className="w-[80%] h-4" />
+					<Skeleton className="w-20 h-4" />
+					<Skeleton className="w-20 h-4" />
+				</div>
+			</div>
+
+			<div className="aspect-video">
+				<div className="flex flex-col gap-1">
+					<Skeleton className="aspect-video" />
+					<Skeleton className="w-[80%] h-4" />
+					<Skeleton className="w-20 h-4" />
+					<Skeleton className="w-20 h-4" />
+				</div>
+			</div>
+
+			<div className="aspect-video">
+				<div className="flex flex-col gap-1">
+					<Skeleton className="aspect-video" />
+					<Skeleton className="w-[80%] h-4" />
+					<Skeleton className="w-20 h-4" />
+					<Skeleton className="w-20 h-4" />
+				</div>
+			</div>
+
+			<div className="aspect-video">
+				<div className="flex flex-col gap-1">
+					<Skeleton className="aspect-video" />
+					<Skeleton className="w-[80%] h-4" />
+					<Skeleton className="w-20 h-4" />
+					<Skeleton className="w-20 h-4" />
+				</div>
+			</div>
+		</div>
+	)
+}

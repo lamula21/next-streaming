@@ -6,10 +6,10 @@ import { TbPlugConnected } from "react-icons/tb"
 import { useTheme } from "next-themes"
 import { signIn, signOut, useSession } from "next-auth/react"
 import { persistor } from "@/modules/store"
-import { useEffect, useRef } from "react"
-import { cn } from "@/lib/utils"
+import { useEffect } from "react"
+import { cn, customEqual } from "@/lib/utils"
 import { useRouter } from "next/navigation"
-import { useDispatch, useSelector, shallowEqual } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { StoreState } from "@/types/redux-types"
 import { fetchTokenValidation } from "@/services/twitch-api"
 import { toast } from "sonner"
@@ -44,20 +44,18 @@ export function Login() {
 
 	const { data: session, status } = useSession()
 
-	console.log(session)
-
 	const dispatch = useDispatch()
 	const loginSession = useSelector(
 		(state: StoreState) => state.counter.loginSession,
-		shallowEqual
+		customEqual
 	)
 	const twitchSession = useSelector(
 		(state: StoreState) => state.counter.twitchSession,
-		shallowEqual
+		customEqual
 	)
 	const youtubeSession = useSelector(
 		(state: StoreState) => state.counter.youtubeSession,
-		shallowEqual
+		customEqual
 	)
 
 	let isConnectedTwitch = twitchSession?.accessToken !== undefined
@@ -92,16 +90,11 @@ export function Login() {
 
 		if (res.ok) {
 			const data = await res.json()
-			console.log("PRObLEM HERE?")
-			dispatch(twitchChannels(data)) // problem here?
+			dispatch(twitchChannels(data))
 		}
 	}
 
 	const getYoutubeChannels = async () => {
-		if (!youtubeSession) {
-			return
-		}
-
 		const res = await fetch("/api/get-youtube-channels", {
 			next: {
 				revalidate: 60 * 60, // 1 hour
@@ -112,10 +105,9 @@ export function Login() {
 		})
 
 		if (res.status === 401) {
-			// console.log("401")
-			// toast.message("Sorry! We ran out of Youtube API quota. Try it tomorrow", {
-			// 	description: "Quotas restart at 12:00 AM PST (Pacific Standard Time)",
-			// })
+			toast.message("Sorry! We ran out of Youtube API quota. Try it tomorrow", {
+				description: "Quotas restart at 12:00 AM PST (Pacific Standard Time)",
+			})
 		}
 
 		if (res.ok) {
@@ -146,7 +138,6 @@ export function Login() {
 
 		// connecting again, save platform session
 		if (session?.provider === "twitch") {
-			console.log(session)
 			dispatch(saveTwitchSession(session))
 		} else if (session?.provider === "google") {
 			dispatch(saveYoutubeSession(session))
@@ -161,7 +152,6 @@ export function Login() {
 	useEffect(() => {
 		if (!twitchSession) return
 
-		console.log(twitchSession)
 		getTwitchChannels()
 	}, [twitchSession])
 

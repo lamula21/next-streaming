@@ -5,9 +5,10 @@ import { YoutubeTopLiveStream } from "@/types/types"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { ThumbCard } from "./ThumbCard"
-import { Skeleton } from "./ui/skeleton"
 import { KEYWORD } from "@/lib/constants"
 import { toast } from "sonner"
+import { TopStreamsSkeleton } from "./skeleton/TwitchTopStreamSkeleton"
+import { customEqual } from "@/lib/utils"
 
 export function YoutubeTopStreams() {
 	const [result, setResult] = useState<YoutubeTopLiveStream>({
@@ -19,7 +20,8 @@ export function YoutubeTopStreams() {
 
 	// get youtube session
 	const ytSession = useSelector(
-		(state: StoreState) => state.counter.youtubeSession
+		(state: StoreState) => state.counter.youtubeSession,
+		customEqual
 	)
 
 	const getYoutubeTopStreams = async () => {
@@ -65,7 +67,7 @@ export function YoutubeTopStreams() {
 				</h2>
 
 				<div className="text-xs">
-					{isLoading && <Skeleton className="h-12 w-36" />}
+					{isLoading && <TopStreamsSkeleton />}
 					{!isLoading && (
 						<div className="select-none grid-cols-2 sm:grid sm:pl-16 lg:grid-cols-3 xl:grid-cols-4 xl:p-32 xl:pr-32 2xl:grid-cols-6">
 							{result.data.map((channel) => (

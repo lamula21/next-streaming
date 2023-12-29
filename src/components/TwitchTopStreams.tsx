@@ -3,10 +3,11 @@
 import { StoreState } from "@/types/redux-types"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import { Skeleton } from "./ui/skeleton"
 import { ThumbCard } from "./ThumbCard"
 import { TwitchTopLiveStream } from "@/types/types"
 import { toast } from "sonner"
+import { TopStreamsSkeleton } from "./skeleton/TwitchTopStreamSkeleton"
+import { customEqual } from "@/lib/utils"
 
 export function TwitchTopStreams() {
 	const [result, setResult] = useState<TwitchTopLiveStream>({
@@ -16,7 +17,8 @@ export function TwitchTopStreams() {
 	const [isLoading, setIsLoading] = useState(true) // loading initially
 
 	const session = useSelector(
-		(state: StoreState) => state.counter.twitchSession
+		(state: StoreState) => state.counter.twitchSession,
+		customEqual
 	)
 
 	const getTwitchTopStreams = async () => {
@@ -40,10 +42,8 @@ export function TwitchTopStreams() {
 	}
 
 	useEffect(() => {
-		console.log("hello")
-
-		// getTwitchTopStreams()
-	}, [])
+		getTwitchTopStreams()
+	}, [session])
 
 	return (
 		<div className="flex flex-col mt-2 space-x-1">
@@ -53,7 +53,7 @@ export function TwitchTopStreams() {
 				</h2>
 
 				<div className="text-xs mt-8">
-					{isLoading && <Skeleton className="h-12 w-36" />}
+					{isLoading && <TopStreamsSkeleton />}
 					{!isLoading && (
 						<div className="select-none gap-3 grid-cols-2 sm:grid sm:px-6 lg:grid-cols-3 xl:grid-cols-4  2xl:grid-cols-6">
 							{result.data.map((channel) => (
