@@ -6,6 +6,9 @@ export const TWITCH_WATCH_ENDPOINT = "https://www.twitch.tv/"
 export const TWITCH_LIVE_STREAM_ENDPOINT =
 	"https://api.twitch.tv/helix/streams?type=live&first=10"
 
+export const TWITCH_SEARCH_ENDPOINT =
+	"https://api.twitch.tv/helix/search/channels?first=10&query="
+
 export const GOOGLE_ENDPOINT =
 	"https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="
 export const YOUTUBE_SUBSCRIPTION_ENDPOINT =

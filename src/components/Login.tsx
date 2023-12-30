@@ -61,8 +61,6 @@ export function Login() {
 	let isConnectedTwitch = twitchSession?.accessToken !== undefined
 	let isConnectedYT = youtubeSession?.accessToken !== undefined
 
-	// useCallback memoize a function to avoid unnecessary re-renders
-	// Note: use useMemo() to memoize a value or a function value
 	const handleSignOutWhenTokenExpired = () => {
 		persistor.purge() // do not await
 		dispatch(resetStore()) // Reset redux store

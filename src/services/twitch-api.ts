@@ -102,3 +102,21 @@ export async function getTwFollowedChannelsInLive(
 
 	return await response.json()
 }
+
+export async function searchStream(
+	query: string,
+	session: Session,
+	platform: string
+) {
+	if (!session) return
+
+	if (query.length === 0) return []
+
+	const response = await fetch(`/api/search-${platform}?q=${query}`, {
+		headers: {
+			Authorization: `OAuth ${session?.accessToken}`,
+		},
+	})
+
+	return await response.json()
+}
