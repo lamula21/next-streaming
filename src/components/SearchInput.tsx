@@ -28,9 +28,12 @@ export function SearchInput() {
 	const ytSession = useSelector(
 		(state: StoreState) => state.counter.youtubeSession
 	)
-	const platform = useSelector((state: StoreState) => state.counter.platform)
+	const selectedPlatform = useSelector(
+		(state: StoreState) => state.counter.selectPlt
+	)
 
-	const currentSession = platform === "twitch" ? twitchSession : ytSession
+	const currentSession =
+		selectedPlatform === "twitch" ? twitchSession : ytSession
 
 	useOnClickOutside(commandRef, () => {
 		setInput("")
@@ -44,7 +47,7 @@ export function SearchInput() {
 		queryKey: ["search-query"],
 		enabled: false,
 		queryFn: async () => {
-			return await searchStream(input, currentSession, platform)
+			return await searchStream(input, currentSession, selectedPlatform)
 		},
 	})
 
