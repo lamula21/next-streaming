@@ -18,10 +18,6 @@ export async function searchStream(
 	session: Session,
 	platform: string
 ) {
-	console.log(query)
-	console.log(platform)
-	console.log(session)
-
 	if (!session) return
 
 	if (query.length === 0) return []
