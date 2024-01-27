@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query"
 import debounce from "lodash.debounce"
 import { useSelector } from "react-redux"
 import { useOnClickOutside } from "@/hooks/useClickOutside"
-import { searchStream } from "@/services/twitch-api"
 import { StoreState } from "@/types/redux-types"
 import { useCallback, useRef, useState } from "react"
 
@@ -17,6 +16,7 @@ import {
 	CommandList,
 } from "./ui/command"
 import { ChannelCard } from "./ChannelCard"
+import { searchStream } from "@/services/client-api"
 
 export function SearchInput() {
 	const [input, setInput] = useState("")
