@@ -12,7 +12,7 @@ import {
 
 import { Button } from "./ui/button"
 import { debounce } from "lodash"
-import { searchStream } from "@/services/twitch-api"
+import { searchStream } from "@/services/client-api"
 import { useQuery } from "@tanstack/react-query"
 import { useSelector } from "react-redux"
 import { StoreState } from "@/types/redux-types"
