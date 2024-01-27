@@ -64,21 +64,21 @@ export function YoutubeTopStreams() {
 					Top Youtube Streaming
 				</h2>
 
-				<div className="text-xs">
+				<div className="text-xs mt-8">
 					{isLoading && <TopStreamsSkeleton />}
 					{!isLoading && (
-						<div className="select-none grid-cols-2 sm:grid sm:pl-16 lg:grid-cols-3 xl:grid-cols-4 xl:p-32 xl:pr-32 2xl:grid-cols-6">
+						<div className="select-none gap-3 grid-cols-2 sm:grid sm:px-6 lg:grid-cols-3 xl:grid-cols-4  2xl:grid-cols-6">
 							{result.data.map((channel) => (
-								<div className="p-1" key={channel.channel_id}>
-									<ThumbCard
-										name={channel.channel_name}
-										chnId={channel.video_id}
-										title={channel.video_name}
-										platform={result.platform}
-										game={result.keyword}
-										thumbUrl={channel.thumbnail}
-									/>
-								</div>
+								<ThumbCard
+									className="yt-shadow-pop-br-out xl:hover:yt-shadow-pop-br"
+									key={`yt-${channel.channel_id}-${channel.video_id}`}
+									name={channel.channel_name}
+									chnId={channel.video_id}
+									title={channel.video_name}
+									platform={result.platform}
+									game={result.keyword}
+									thumbUrl={channel.thumbnail}
+								/>
 							))}
 						</div>
 					)}

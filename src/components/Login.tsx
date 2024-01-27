@@ -98,7 +98,7 @@ export function Login() {
 				revalidate: 60 * 60, // 1 hour
 			},
 			headers: {
-				Authorization: `OAuth ${youtubeSession}`,
+				Authorization: `OAuth ${youtubeSession.accessToken}`,
 			},
 		})
 

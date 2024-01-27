@@ -1,9 +1,11 @@
+import { cn } from "@/lib/utils"
 import { selected } from "@/modules/slice"
 import { StoreState } from "@/types/redux-types"
 import Image from "next/image"
 import { useDispatch, useSelector } from "react-redux"
 
 interface ThumbCardProps {
+	className?: string
 	name: string
 	viewCount?: number
 	thumbUrl: string
@@ -21,6 +23,7 @@ export function ThumbCard({
 	game,
 	platform,
 	chnId,
+	className,
 }: ThumbCardProps) {
 	const dispatch = useDispatch()
 
@@ -37,7 +40,11 @@ export function ThumbCard({
 
 	return (
 		<button className="w-full" onClick={() => dispatch(selected(chnInfo))}>
-			<div className="flex flex-col xl:hover:scale-105 transition-transform duration-200">
+			<div
+				className={
+					(cn("flex flex-col transition-transform duration-200"), className)
+				}
+			>
 				<div className="relative ">
 					<Image src={thumbUrl} alt="thumbnail" width={320} height={180} />
 

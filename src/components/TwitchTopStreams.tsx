@@ -57,17 +57,17 @@ export function TwitchTopStreams() {
 					{!isLoading && (
 						<div className="select-none gap-3 grid-cols-2 sm:grid sm:px-6 lg:grid-cols-3 xl:grid-cols-4  2xl:grid-cols-6">
 							{result.data.map((channel) => (
-								<div className="" key={channel.id}>
-									<ThumbCard
-										name={channel.user_name}
-										chnId={channel.user_login}
-										title={channel.title}
-										platform={result.platform}
-										game={channel.game_name}
-										thumbUrl={channel.thumbnail_url}
-										viewCount={channel.viewer_count}
-									/>
-								</div>
+								<ThumbCard
+									className="tw-shadow-pop-br-out  xl:hover:tw-shadow-pop-br"
+									key={channel.id}
+									name={channel.user_name}
+									chnId={channel.user_login}
+									title={channel.title}
+									platform={result.platform}
+									game={channel.game_name}
+									thumbUrl={channel.thumbnail_url}
+									viewCount={channel.viewer_count}
+								/>
 							))}
 						</div>
 					)}

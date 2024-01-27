@@ -1,22 +1,17 @@
 import Image from "next/image"
 import Link from "next/link"
+import { SandBoxLogo } from "./icons"
 
 export function Logo() {
 	return (
 		<div className="flex flex-row pr-2 items-end gap-3 mb-4">
 			<Link href="/">
-				<Image
-					src="/logo.png"
-					alt="StreamHub Logo"
-					className=""
-					width={48}
-					height={48}
-				/>
+				<SandBoxLogo className="w-14 h-14 fill-white " />
 			</Link>
 
 			<div className="hidden lg:flex flex-col text-xl font-black">
-				<span>Trevo</span>
-				<span>Tv</span>
+				<span>SandBox</span>
+				<span>.tv</span>
 			</div>
 		</div>
 	)

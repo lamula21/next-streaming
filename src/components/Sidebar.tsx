@@ -20,7 +20,7 @@ export function Sidebar({ className }: SidebarProps) {
 				<Logo />
 
 				<div className={cn("pb-12", className)}>
-					<div className="space-y-4 py-4">
+					<div className="space-y-8 py-4">
 						<div>
 							<h2 className="flex mb-2 lg:px-4 text-lg font-semibold tracking-tight">
 								<span className="hidden lg:block lg:mr-2">Twitch</span>
@@ -45,6 +45,8 @@ export function Sidebar({ className }: SidebarProps) {
 								}
 							</div>
 						</div>
+
+						<div className="w-full border" />
 
 						<div>
 							<h2 className="flex mb-2 lg:px-4 text-lg font-semibold tracking-tight">

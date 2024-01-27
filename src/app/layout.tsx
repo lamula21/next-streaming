@@ -11,7 +11,7 @@ import { QueryProvider } from "@/components/provider/QueryProvider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-	title: "Trevo Tv - Stream Platform",
+	title: "SandBox Tv - Stream Platform",
 	description: "The ultimate stream platform for Twitch and Youtube",
 }
 
